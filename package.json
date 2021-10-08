@@ -1,0 +1,29 @@
+{
+  "name": "lamthiennguyen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WarBuggy/lamthiennguyen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WarBuggy/lamthiennguyen/issues"
+  },
+  "homepage": "https://github.com/WarBuggy/lamthiennguyen#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dayjs": "^1.10.7",
+    "express": "^4.17.1",
+    "express-useragent": "^1.0.15",
+    "fs-extra": "^10.0.0",
+    "mysql": "^2.18.1"
+  }
+}

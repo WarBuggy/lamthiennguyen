@@ -32,9 +32,9 @@
     --general-content-parent-width: 100%;
 }
 
-@media only screen and (min-width: 450px) {
+@media only screen and (min-width: 400px) {
      :root {
-        --general-content-parent-width: 450px;
+        --general-content-parent-width: 400px;
     }
 }
 

@@ -154,4 +154,12 @@ module.exports = {
         });
         return string;
     },
+
+    decodeBase64: function(base64String) {
+        return Buffer.from(base64String, 'base64').toString('ascii');
+    },
+
+    encodeBase64: function(string) {
+        return Buffer.from(string).toString('base64');
+    },
 };

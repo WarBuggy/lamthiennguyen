@@ -5,18 +5,14 @@ const mysql = require('mysql');
 let connection = null;
 
 module.exports = {
-    query: function(sql, param, logInfoAction, logSQL, logParam, logLogInfo) {
+    query: function(sql, param, logSQL, logParam) {
         if (logSQL === true || configDb.logSQL == true) {
-            console.log('Action sql:');
+            console.log('SQL:');
             console.log(sql);
         }
         if (logParam === true || configDb.logParams === true) {
-            console.log('Action params:');
+            console.log('Params:');
             console.log(param);
-        }
-        if (logLogInfo === true || configDb.logLogInfo === true) {
-            console.log('Action log info:');
-            console.log(logInfoAction);
         }
         return new Promise(function(resolve) {
             module.exports.getConnection()
@@ -24,30 +20,14 @@ module.exports = {
                     let formatQuery = mysql.format(sql, param);
                     connection.query(formatQuery, async function(queryError, selectResult, fields) {
                         if (queryError) {
-                            common.consoleLogDBError(`Database error (${logInfoAction.idPurpose}): ${queryError}.`);
-                            let logResult = await logAction(param, logInfoAction, 1, `${queryError}`);
-                            let statusLog = 'no';
-                            if (logResult) {
-                                statusLog = 'yes';
-                            }
-                            common.consoleLogActionError(`IP: ${logInfoAction.ip}, purpose: ${logInfoAction.idPurpose}, ` +
-                                `action: ${logInfoAction.action}, status: failed, logged: ${statusLog}.`);
-                            resolve({ success: false, });
+                            resolve({ success: false, message: queryError });
                             return;
                         }
-                        let logResult = await logAction(param, logInfoAction, 0, '');
-                        let statusLog = 'no';
-                        if (logResult) {
-                            statusLog = 'yes';
-                        }
-
                         let result = {
                             sqlResults: selectResult,
                             fields: fields,
                             success: true,
                         };
-                        common.consoleLogAction(`IP: ${logInfoAction.ip}, purpose: ${logInfoAction.idPurpose}, ` +
-                            `action: ${logInfoAction.action}, status: success, logged: ${statusLog}.`);
                         resolve(result);
                     });
                 });

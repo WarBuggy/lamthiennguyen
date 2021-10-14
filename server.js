@@ -24,9 +24,10 @@ async function start() {
 
 function loadFile() {
     let contentHTML = common.loadFile('./page/html');
-
+    let commonHTML = common.loadFile('./page/html/common');
     let data = {
         html: contentHTML,
+        commonHTML: commonHTML,
     };
     return data;
 };

@@ -44,21 +44,53 @@ module.exports = function(app) {
         //     db.updatePurpose(logInfoPurpose, 0);
         // }
     });
+
+    app.get('/register.html', async function(request, response) {
+        let purpose = 'html page register';
+        await handleRequestPageStageInit(purpose, request, response);
+
+        let html = getContent(app, ['html', 'register'], 'page/html/register.html');
+        response.send(html);
+    });
 };
 
 function getContent(app, key, filePath) {
+    let contentFile = '';
     if (configSystem.reloadContent) {
-        let contentFile = fs.readFileSync(filePath, { encoding: 'utf8', });
-        contentFile = common.processContentFile(contentFile);
-        return contentFile;
+        contentFile = fs.readFileSync(filePath, { encoding: 'utf8', });
+    } else {
+        contentFile = app.get('data');
+        for (let i = 0; i < key.length; i++) {
+            contentFile = contentFile[key[i]];
+        }
     }
-
-    let data = app.get('data');
-    for (let i = 0; i < key.length; i++) {
-        data = data[key[i]];
-    }
-    let contentFile = common.processContentFile(data);
+    contentFile = common.processStringLabel(contentFile);
+    contentFile = processCommonHTML(app, contentFile);
     return contentFile;
+};
+
+function getCommonHTMLContent(app) {
+    if (configSystem.reloadContent) {
+        let path = 'page/html/common';
+        let linkPreview = fs.readFileSync(`${path}/linkPreview.html`, { encoding: 'utf8', });
+        let viewPortMeta = fs.readFileSync(`${path}/viewPortMeta.html`, { encoding: 'utf8', });
+        let favicon = fs.readFileSync(`${path}/favicon.html`, { encoding: 'utf8', });
+        return {
+            linkPreview,
+            viewPortMeta,
+            favicon,
+        };
+    }
+    let data = app.get('data');
+    return data.commonHTML;
+};
+
+function processCommonHTML(app, content) {
+    let commonHTML = getCommonHTMLContent(app);
+    content = content.replace('|||linkPreview|||', commonHTML.linkPreview)
+        .replace('|||viewPortMeta|||', commonHTML.viewPortMeta)
+        .replace('|||favicon|||', commonHTML.favicon);
+    return content;
 };
 
 function createObjectLog(purpose, request) {
@@ -82,8 +114,11 @@ async function handleRequestPageStageInit(purpose, request, response) {
     actionResult = await handleRequestPageCookie(request, response, objectLog);
     let infoUser = actionResult.result;
 
+    console.log('objectLog');
     console.log(objectLog);
+    console.log('pageParam');
     console.log(param);
+    console.log('infoUser');
     console.log(infoUser);
 };
 

@@ -112,11 +112,12 @@ module.exports = {
     loadFile: function(path) {
         let contentObject = {};
         fs.readdirSync(path).forEach(function(file) {
-            let part = file.split('.');
             let filePath = path + '/' + file;
-            let contentFile = fs.readFileSync(filePath, { encoding: 'utf8', });
-            contentFile = module.exports.processContentFile(contentFile);
-            contentObject[part[0]] = contentFile;
+            if (!fs.statSync(filePath).isDirectory()) {
+                let part = file.split('.');
+                let contentFile = fs.readFileSync(filePath, { encoding: 'utf8', });
+                contentObject[part[0]] = contentFile;
+            }
         });
         return contentObject;
     },
@@ -140,11 +141,6 @@ module.exports = {
             }
         }
         return result;
-    },
-
-    processContentFile: function(contentFile) {
-        contentFile = module.exports.processStringLabel(contentFile);
-        return contentFile;
     },
 
     processStringLabel: function(string) {

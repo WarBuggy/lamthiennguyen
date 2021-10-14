@@ -1,0 +1,28 @@
+div.account-grid-outer {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+}
+
+div.account-logo {
+    display: block;
+    background-color: blue;
+    width: 120px;
+    height: 50px;
+    justify-self: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+div.account-grid-outer-no-user {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 32px;
+    row-gap: 16px;
+    justify-items: center;
+}
+
+div.account-text-no-user {
+    justify-self: start;
+    grid-column: auto / span 2;
+}

@@ -2,6 +2,7 @@ const configSystem = require('./config/configSystem.js');
 
 const common = require('./common/common.js');
 const db = require('./common/db.js');
+const processContent = require('./page/page.js').processContent;
 
 const express = require('express');
 const cors = require('cors');
@@ -25,11 +26,13 @@ async function start() {
 function loadFile() {
     let contentHTML = common.loadFile('./page/html');
     let commonHTML = common.loadFile('./page/html/common');
-    let data = {
-        html: contentHTML,
-        commonHTML: commonHTML,
-    };
-    return data;
+    let contentCSS = common.loadFile('./page/css');
+    let listKey = Object.keys(contentHTML);
+    for (let i = 0; i < listKey.length; i++) {
+        let key = listKey[i];
+        contentHTML[key] = processContent(key, contentHTML[key], commonHTML, contentCSS);
+    }
+    return contentHTML;
 };
 
 async function prepareDbConnection() {

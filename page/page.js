@@ -15,6 +15,19 @@ const fs = require('fs-extra');
 // const system = require('../../config/system.js');
 // dayjs.extend(dayjsWeekOfYear);
 
+const dataPage = {
+    index: {
+        path: 'page/html/index.html',
+        listCss: [],
+        listScript: [],
+    },
+    register: {
+        path: 'page/html/register.html',
+        listCss: ['account'],
+        listScript: [],
+    },
+};
+
 
 module.exports = function(app) {
     app.get('/', function(request, response) {
@@ -22,10 +35,11 @@ module.exports = function(app) {
     });
 
     app.get('/index.html', async function(request, response) {
-        let purpose = 'html page index';
+        let key = 'index';
+        let purpose = `html page ${key}`;
         await handleRequestPageStageInit(purpose, request, response);
 
-        let html = getContent(app, ['html', 'index'], 'page/html/index.html');
+        let html = getContent(app, key);
         response.send(html);
 
         // let action = 'get user info from cookie';
@@ -46,51 +60,58 @@ module.exports = function(app) {
     });
 
     app.get('/register.html', async function(request, response) {
-        let purpose = 'html page register';
+        let key = 'register';
+        let purpose = `html page ${key}`;
         await handleRequestPageStageInit(purpose, request, response);
 
-        let html = getContent(app, ['html', 'register'], 'page/html/register.html');
+        let html = getContent(app, key);
         response.send(html);
     });
 };
 
-function getContent(app, key, filePath) {
-    let contentFile = '';
-    if (configSystem.reloadContent) {
-        contentFile = fs.readFileSync(filePath, { encoding: 'utf8', });
-    } else {
-        contentFile = app.get('data');
-        for (let i = 0; i < key.length; i++) {
-            contentFile = contentFile[key[i]];
-        }
-    }
+module.exports.processContent = function(key, contentFile, commonHTML, css) {
     contentFile = common.processStringLabel(contentFile);
-    contentFile = processCommonHTML(app, contentFile);
+    contentFile = processCommonHTML(contentFile, commonHTML);
+    contentFile = processCSS(contentFile, dataPage[key].listCss, css);
     return contentFile;
 };
 
-function getCommonHTMLContent(app) {
-    if (configSystem.reloadContent) {
-        let path = 'page/html/common';
-        let linkPreview = fs.readFileSync(`${path}/linkPreview.html`, { encoding: 'utf8', });
-        let viewPortMeta = fs.readFileSync(`${path}/viewPortMeta.html`, { encoding: 'utf8', });
-        let favicon = fs.readFileSync(`${path}/favicon.html`, { encoding: 'utf8', });
-        return {
-            linkPreview,
-            viewPortMeta,
-            favicon,
-        };
+
+function getContent(app, key) {
+    if (configSystem.reloadContent !== true) {
+        let data = app.get('data');
+        return data[key];
     }
-    let data = app.get('data');
-    return data.commonHTML;
+    let filePath = dataPage[key].path;
+    let contentFile = fs.readFileSync(filePath, { encoding: 'utf8', });
+    let commonHTML = common.loadFile('page/html/common');
+    let css = common.loadFile('page/css');
+    let contentFinal = module.exports.processContent(key, contentFile, commonHTML, css);
+    return contentFinal;
 };
 
-function processCommonHTML(app, content) {
-    let commonHTML = getCommonHTMLContent(app);
+function processCommonHTML(content, commonHTML) {
     content = content.replace('|||linkPreview|||', commonHTML.linkPreview)
         .replace('|||viewPortMeta|||', commonHTML.viewPortMeta)
         .replace('|||favicon|||', commonHTML.favicon);
     return content;
+};
+
+function processCSS(contentFile, listCSS, css) {
+    let list = ['general'];
+    if (listCSS != null) {
+        list = list.concat(listCSS);
+    }
+    let listString = [];
+    for (let i = 0; i < list.length; i++) {
+        let key = list[i];
+        if (css[key] != null) {
+            listString.push(css[key]);
+        }
+    }
+    let string = `<style>${listString.join('')}</style>`;
+    contentFile = contentFile.replace('|||css|||', string);
+    return contentFile;
 };
 
 function createObjectLog(purpose, request) {

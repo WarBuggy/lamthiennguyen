@@ -59,6 +59,9 @@ module.exports.processContent = function(contentFile, commonHTML, css) {
     contentFile = common.processStringLabel(contentFile);
     contentFile = processCommonHTML(contentFile, commonHTML);
     contentFile = processCSS(contentFile, css);
+    if (configSystem.reloadContent !== true) {
+        contentFile = removePathFile(contentFile);
+    }
     return contentFile;
 };
 
@@ -68,11 +71,16 @@ function getContent(app, key) {
     if (configSystem.reloadContent !== true) {
         return data[key];
     }
-    let pathFile = getPathFile(data[key]);
-    let contentFile = fs.readFileSync(pathFile, { encoding: 'utf8', });
+    let contentFile = data[key];
+    let pathFile = getPathFile(contentFile);
+    if (pathFile == null) {
+        return contentFile;
+    }
+    contentFile = fs.readFileSync(pathFile, { encoding: 'utf8', });
     let commonHTML = common.loadFile('page/html/common');
     let css = common.loadFile('page/css');
     let contentFinal = module.exports.processContent(contentFile, commonHTML, css);
+    contentFinal = removePathFile(contentFinal);
     return contentFinal;
 };
 
@@ -97,6 +105,10 @@ function processCSS(contentFile, css) {
         return `<style>${stringCss.join('')}</style>`;
     });
     return contentFile;
+};
+
+function removePathFile(contentFile) {
+    return contentFile.replace(/<!--PATH .* PATH-->/g, '');
 };
 
 function getPathFile(contentFile) {

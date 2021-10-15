@@ -27,10 +27,11 @@ function loadFile() {
     let contentHTML = common.loadFile('./page/html');
     let commonHTML = common.loadFile('./page/html/common');
     let contentCSS = common.loadFile('./page/css');
+    let contentScript = common.loadFile('./page/script');
     let listKey = Object.keys(contentHTML);
     for (let i = 0; i < listKey.length; i++) {
         let key = listKey[i];
-        contentHTML[key] = processContent(contentHTML[key], commonHTML, contentCSS);
+        contentHTML[key] = processContent(contentHTML[key], commonHTML, contentCSS, contentScript);
     }
     return contentHTML;
 };

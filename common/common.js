@@ -116,6 +116,7 @@ module.exports = {
             if (!fs.statSync(filePath).isDirectory()) {
                 let part = file.split('.');
                 let contentFile = fs.readFileSync(filePath, { encoding: 'utf8', });
+                contentFile = module.exports.processStringLabel(contentFile);
                 contentObject[part[0]] = contentFile;
             }
         });

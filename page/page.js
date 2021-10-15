@@ -55,10 +55,10 @@ module.exports = function(app) {
     });
 };
 
-module.exports.processContent = function(contentFile, commonHTML, css) {
-    contentFile = common.processStringLabel(contentFile);
+module.exports.processContent = function(contentFile, commonHTML, css, script) {
     contentFile = processCommonHTML(contentFile, commonHTML);
     contentFile = processCSS(contentFile, css);
+    contentFile = processScript(contentFile, script);
     if (configSystem.reloadContent !== true) {
         contentFile = removePathFile(contentFile);
     }
@@ -77,9 +77,11 @@ function getContent(app, key) {
         return contentFile;
     }
     contentFile = fs.readFileSync(pathFile, { encoding: 'utf8', });
+    contentFile = common.processStringLabel(contentFile);
     let commonHTML = common.loadFile('page/html/common');
     let css = common.loadFile('page/css');
-    let contentFinal = module.exports.processContent(contentFile, commonHTML, css);
+    let script = common.loadFile('page/script');
+    let contentFinal = module.exports.processContent(contentFile, commonHTML, css, script);
     contentFinal = removePathFile(contentFinal);
     return contentFinal;
 };
@@ -103,6 +105,22 @@ function processCSS(contentFile, css) {
             }
         }
         return `<style>${stringCss.join('')}</style>`;
+    });
+    return contentFile;
+};
+
+function processScript(contentFile, script) {
+    contentFile = contentFile.replace(/\|\|\|script\|\|\|.*\|\|\|script\|\|\|/g, function(match) {
+        let listString = match.replace(/\|\|\|script\|\|\|/g, '');
+        let list = listString.split(',');
+        let stringScript = [];
+        for (let i = 0; i < list.length; i++) {
+            let key = list[i];
+            if (script[key] != null) {
+                stringScript.push(script[key]);
+            }
+        }
+        return `<script>${stringScript.join('')}</script>`;
     });
     return contentFile;
 };

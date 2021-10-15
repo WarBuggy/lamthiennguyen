@@ -15,20 +15,6 @@ const fs = require('fs-extra');
 // const system = require('../../config/system.js');
 // dayjs.extend(dayjsWeekOfYear);
 
-const dataPage = {
-    index: {
-        path: 'page/html/index.html',
-        listCss: [],
-        listScript: [],
-    },
-    register: {
-        path: 'page/html/register.html',
-        listCss: ['account'],
-        listScript: [],
-    },
-};
-
-
 module.exports = function(app) {
     app.get('/', function(request, response) {
         response.redirect('/index.html');
@@ -69,24 +55,24 @@ module.exports = function(app) {
     });
 };
 
-module.exports.processContent = function(key, contentFile, commonHTML, css) {
+module.exports.processContent = function(contentFile, commonHTML, css) {
     contentFile = common.processStringLabel(contentFile);
     contentFile = processCommonHTML(contentFile, commonHTML);
-    contentFile = processCSS(contentFile, dataPage[key].listCss, css);
+    contentFile = processCSS(contentFile, css);
     return contentFile;
 };
 
 
 function getContent(app, key) {
+    let data = app.get('data');
     if (configSystem.reloadContent !== true) {
-        let data = app.get('data');
         return data[key];
     }
-    let filePath = dataPage[key].path;
-    let contentFile = fs.readFileSync(filePath, { encoding: 'utf8', });
+    let pathFile = getPathFile(data[key]);
+    let contentFile = fs.readFileSync(pathFile, { encoding: 'utf8', });
     let commonHTML = common.loadFile('page/html/common');
     let css = common.loadFile('page/css');
-    let contentFinal = module.exports.processContent(key, contentFile, commonHTML, css);
+    let contentFinal = module.exports.processContent(contentFile, commonHTML, css);
     return contentFinal;
 };
 
@@ -97,21 +83,28 @@ function processCommonHTML(content, commonHTML) {
     return content;
 };
 
-function processCSS(contentFile, listCSS, css) {
-    let list = ['general'];
-    if (listCSS != null) {
-        list = list.concat(listCSS);
-    }
-    let listString = [];
-    for (let i = 0; i < list.length; i++) {
-        let key = list[i];
-        if (css[key] != null) {
-            listString.push(css[key]);
+function processCSS(contentFile, css) {
+    contentFile = contentFile.replace(/\|\|\|css\|\|\|.*\|\|\|css\|\|\|/g, function(match) {
+        let listString = match.replace(/\|\|\|css\|\|\|/g, '');
+        let list = listString.split(',');
+        let stringCss = [];
+        for (let i = 0; i < list.length; i++) {
+            let key = list[i];
+            if (css[key] != null) {
+                stringCss.push(css[key]);
+            }
         }
-    }
-    let string = `<style>${listString.join('')}</style>`;
-    contentFile = contentFile.replace('|||css|||', string);
+        return `<style>${stringCss.join('')}</style>`;
+    });
     return contentFile;
+};
+
+function getPathFile(contentFile) {
+    let founds = contentFile.match(/<!--PATH (?<path>.*) PATH-->/);
+    if (founds == null) {
+        return null;
+    }
+    return founds.groups.path;
 };
 
 function createObjectLog(purpose, request) {

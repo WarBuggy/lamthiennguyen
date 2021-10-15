@@ -30,7 +30,7 @@ function loadFile() {
     let listKey = Object.keys(contentHTML);
     for (let i = 0; i < listKey.length; i++) {
         let key = listKey[i];
-        contentHTML[key] = processContent(key, contentHTML[key], commonHTML, contentCSS);
+        contentHTML[key] = processContent(contentHTML[key], commonHTML, contentCSS);
     }
     return contentHTML;
 };

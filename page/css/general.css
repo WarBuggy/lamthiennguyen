@@ -104,11 +104,21 @@ div.general-content-parent {
 div.general-validate {
     display: none;
     padding: 4px;
-    background-image: url(../res/img/required/exclamation.svg);
+    background-image: url(image/exclamation.svg);
     background-size: 16px 16px;
     background-repeat: no-repeat;
     background-position: 0px 8px;
     padding-left: 24px;
+}
+
+div.general-button {
+    border-radius: 4px;
+    border: 1px solid black;
+    padding: 4px 8px 4px 8px;
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+    box-sizing: border-box;
 }
 
 
@@ -124,15 +134,6 @@ div.general-button-important {
     margin-top: 16px;
 }
 
-div.general-button {
-    border-radius: 4px;
-    border: 1px solid black;
-    padding: 4px 8px 4px 8px;
-    text-align: center;
-    cursor: pointer;
-    display: inline-block;
-    box-sizing: border-box;
-}
 
 div.general-overlay {
     display: grid;

@@ -11,7 +11,7 @@
     <!-- CSS -->
     |||css|||general,account|||css|||
     <!-- SCRIPT -->
-    |||script|||account|||script|||
+    |||script|||common,account,register|||script|||
 </head>
 
 <body>
@@ -23,27 +23,28 @@
             <div class='general-content-outer'>
                 <h2 style='margin-bottom: 16px;'>{{{title_register}}}</h2>
                 <div id='divRegister' class='account-grid-outer'>
-                    <div>Họ</div>
+                    <div>{{{name_last}}}</div>
                     <input id='inputNameLast'>
                     <div id='divValidateNameLast' class='general-validate'>{{{require_last_name}}}</div>
-                    <div>Tên lót (nếu có)</div>
+                    <div>{{{name_middle}}}</div>
                     <input id='inputNameMiddle'>
-                    <div>Tên</div>
+                    <div>{{{name_first}}}</div>
                     <input id='inputNameFirst'>
                     <div id='divValidateNameFirst' class='general-validate'>{{{require_first_name}}}</div>
-                    <div>Email</div>
+                    <div>{{{email}}}</div>
                     <input id='inputEmail'>
                     <div id='divValidateEmail' class='general-validate'>{{{require_email}}}</div>
                     <div id='divValidateEmailFormat' class='general-validate'>{{{require_email_format}}}</div>
                     <div id='divValidateEmailTaken' class='general-validate'>{{{require_email_taken}}}</div>
-                    <div>Mã xác nhận email</div>
+                    <div>{{{email_confirm_code}}}</div>
                     <div style='display: grid; grid-template-columns: 1fr auto; column-gap: 32px;'>
                         <input id='inputEmailConfirm' style='align-self: center;'>
-                        <div class='general-button' onclick='sendEmailConfirmCode()'>{{{send_email_confirm_code}}}</div>
+                        <div class='general-button' onclick='sendEmailConfirmCode()'>
+                            {{{send_email_confirm_code}}}</div>
                     </div>
                     <div id='divValidateEmailConfirm' class='general-validate'>{{{require_email_confirm}}}</div>
                     <div id='divValidateEmailCorrect' class='general-validate'>{{{require_email_correct}}}</div>
-                    <div>Mật khẩu</div>
+                    <div>{{{password}}}</div>
                     <input id='inputPassword' type='password'>
                     <div id='divValidatePassword' class='general-validate'>{{{require_password}}}</div>
                     <div id='divValidatePasswordStrong' class='general-validate'>{{{require_password_strong}}}</div>
@@ -51,7 +52,7 @@
                         <input id='inputCheckShowPassword' type='checkbox' onchange='showPassword()'>
                         <label for='inputCheckShowPassword'>{{{show_password}}}</label>
                     </div>
-                    <div class='general-button-important' onclick='register()' style='margin-top: 16px;'>{{{register}}}
+                    <div class='general-button register' onclick='register()' style='margin-top: 16px;'>{{{register}}}
                     </div>
                     <div style='display: grid; grid-template-columns: auto auto; column-gap: 32px; margin-top: 32px; justify-content: center;'>
                         <a class='general-button-link' href='login.html|||stringParam|||'>{{{login}}}</a>

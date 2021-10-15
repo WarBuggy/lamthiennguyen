@@ -1,9 +1,16 @@
+.general-button.register {
+    width: 150px;
+    justify-self: center;
+}
+
 div.account-grid-outer {
     display: grid;
     grid-template-columns: 1fr;
     row-gap: 8px;
 }
 
+
+/*
 div.account-logo {
     display: block;
     background-color: blue;
@@ -26,3 +33,4 @@ div.account-text-no-user {
     justify-self: start;
     grid-column: auto / span 2;
 }
+*/

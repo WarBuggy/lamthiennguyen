@@ -22,7 +22,22 @@ module.exports = {
             vi: 'Nhớ thông tin đăng nhập',
         },
         error_api_general: {
-            vi: 'Hệ thống gặp lỗi {0}.\nXin vui lòng thử lại sau!',
+            vi: 'Hệ thống gặp lỗi {0}.\\nXin vui lòng thử lại sau!',
+        },
+        name_first: {
+            vi: 'Tên',
+        },
+        name_middle: {
+            vi: 'Tên lót',
+        },
+        name_last: {
+            vi: 'Họ',
+        },
+        email: {
+            vi: 'Email',
+        },
+        email_confirm_code: {
+            vi: 'Mã xác thực email',
         },
         send_email_confirm_code: {
             vi: 'Gửi mã.',

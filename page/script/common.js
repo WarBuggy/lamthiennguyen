@@ -116,6 +116,7 @@ class Common {
         return result;
     };
 
+    /*
     static saveToStorage(key, value) {
         if (typeof(Storage) === "undefined") {
             return;
@@ -143,4 +144,5 @@ class Common {
             }
         }
     };
+    */
 };

@@ -58,5 +58,6 @@ function prepareHttpServer() {
     http.createServer(app).listen(configSystem.httpPort, function() {
         common.consoleLog('HTTP Server started on port ' + configSystem.httpPort + '.');
         require('./page/page.js')(app);
+        require('./api/credential.js')(app);
     });
 };

@@ -1,11 +1,11 @@
-const templateEmail = require('../page/common/templateEmail.js');
-const configDb = require('../config/db.js');
-const configSystem = require('../config/system.js');
+const configDb = require('../config/configDb.js');
+const configSystem = require('../config/configSystem.js');
+
 const common = require('../common/common.js');
-const commonPage = require('../page/commonPage.js');
 const db = require('../common/db.js');
-const mailer = require('../common/mailer.js');
 const cryptoCS = require('../common/crypto.js');
+//const mailer = require('../common/mailer.js');
+
 const passwordStrength = require('check-password-strength');
 const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
